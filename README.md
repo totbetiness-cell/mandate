@@ -51,7 +51,7 @@ what exists.
 - [x] Project scaffold, production build, test harness
 - [x] Amount handling: SOL parsed from decimal strings into integer lamports,
       so no limit can be walked past by floating-point rounding
-- [ ] Deployment to GitHub Pages
+- [x] Deployment to GitHub Pages — <https://totbetiness-cell.github.io/mandate/>
 - [ ] Policy engine: four rule kinds, parser, unit tests
 - [ ] Mandate editor
 - [ ] Devnet integration: keypair, airdrop, transfer, memo
