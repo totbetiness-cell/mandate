@@ -5,6 +5,8 @@
   --ink: #1a1a18;
   --ink-muted: #6b6b66;
   --rule: #e2e2dd;
+  --ok: #1f7a46;
+  --warn: #a33a1f;
 
   font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   line-height: 1.65;
@@ -21,6 +23,8 @@
     --ink: #f0f0eb;
     --ink-muted: #9a9a92;
     --rule: #2e2e28;
+    --ok: #7de08a;
+    --warn: #f0a08a;
   }
 }
 

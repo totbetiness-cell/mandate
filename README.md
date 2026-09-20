@@ -58,17 +58,17 @@ refusal always points at a line you can go and read.
 
 ## Status
 
-**Day 2 of the build.** The engine is done and tested; nothing is wired to a
-screen or to a chain yet, so the page still only describes the product. This
-repository's history is public and starts at zero; what is listed as done is
-what exists.
+**Day 3 of the build.** The editor is live: type a mandate, watch the rules
+appear, try a transfer against them and see which line decides. Nothing is
+signed or sent yet — the devnet integration is next. This repository's history
+is public and starts at zero; what is listed as done is what exists.
 
 - [x] Project scaffold, production build, test harness
 - [x] Amount handling: SOL parsed from decimal strings into integer lamports,
       so no limit can be walked past by floating-point rounding
 - [x] Deployment to GitHub Pages — <https://totbetiness-cell.github.io/mandate/>
 - [x] Policy engine: four rule kinds, parser, 26 unit tests
-- [ ] Mandate editor
+- [x] Mandate editor with live rule readout
 - [ ] Devnet integration: keypair, airdrop, transfer, memo
 - [ ] Audit trail with explorer links
 - [ ] Demo video
@@ -107,7 +107,7 @@ browser; the demo keypair is generated there and never leaves it.
 |---|---|
 | Cluster | Solana **devnet** (public RPC) |
 | Custom program | none — the check happens off-chain, before signing |
-| Programs used | System Program (transfers), SPL Memo (audit record) — IDs listed here once wired |
+| Programs used | System Program (transfers) and SPL Memo, `MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr` (verified against the official docs and the devnet RPC) |
 | Demo addresses | _added when the devnet integration lands_ |
 | Example signatures | _added when the devnet integration lands_ |
 
