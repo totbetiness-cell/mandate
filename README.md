@@ -76,7 +76,7 @@ listed as done is what exists.
 
 ## Run it locally
 
-Requires Node 22 or newer (built with 24.21.0; CI runs 22).
+Requires Node 22 or newer (built with 24.21.0; CI runs 24 — the lock file resolves differently under npm 10).
 
 ```bash
 npm install
