@@ -56,12 +56,25 @@ one component that has to be boring is boring on purpose.
 Rules are read top to bottom and the first one that objects decides, so a
 refusal always points at a line you can go and read.
 
+### The audit trail
+
+Every answer is recorded in the browser: time, verdict, amount, recipient, the
+quoted rule that decided, and — for a transfer that was actually sent — a link
+to it on the explorer. Refused entries carry no link, because nothing was
+signed and there is nothing on the chain to show.
+
+The trail lives in your browser and nowhere else. There is no backend, so there
+is no server-side log you would have to take our word for. The entries that
+matter are already public: they are on devnet.
+
 ## Status
 
-**Day 4 of the build.** The loop is closed: write a mandate, try a transfer,
-and if the rules allow it the page signs and sends it on devnet with a memo
-naming the rules that allowed it. If the rules refuse, no signature is ever
-produced. This repository's history is public and starts at zero; what is
+**Day 5 of the build.** Write a mandate, try a transfer, and the page answers
+before anything is signed. Allowed transfers go out on devnet carrying a memo
+that names the rules that allowed them; refused ones produce no signature at
+all. Either way the answer is kept in the audit trail, so the refusals are
+visible next to the approvals — that absence of a signature is the product
+working. This repository's history is public and starts at zero; what is
 listed as done is what exists.
 
 - [x] Project scaffold, production build, test harness
@@ -71,7 +84,7 @@ listed as done is what exists.
 - [x] Policy engine: four rule kinds, parser, 26 unit tests
 - [x] Mandate editor with live rule readout
 - [x] Devnet integration: keypair, airdrop, transfer, memo
-- [ ] Audit trail with explorer links
+- [x] Audit trail with explorer links, refusals included
 - [ ] Demo video
 
 ## Run it locally

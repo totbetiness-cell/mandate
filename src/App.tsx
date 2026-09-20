@@ -11,10 +11,15 @@ import {
   sendAllowedTransfer,
 } from './chain/devnet'
 import type { DemoWallet } from './chain/devnet'
+import { Intro } from './components/Intro'
 import { MandateEditor } from './components/MandateEditor'
+import { TrailPanel } from './components/TrailPanel'
 import { TransferCheck } from './components/TransferCheck'
 import { WalletPanel } from './components/WalletPanel'
+import { breachAmount } from './lib/breach'
 import { exampleMandate } from './lib/demo'
+import { entryFrom, loadTrail, prepend, saveTrail } from './lib/trail'
+import type { TrailEntry } from './lib/trail'
 
 const MANDATE_KEY = 'mandate.text'
 
@@ -65,8 +70,7 @@ export default function App() {
   const [busy, setBusy] = useState(false)
   const [sending, setSending] = useState(false)
   const [notice, setNotice] = useState<string | null>(null)
-  const [signature, setSignature] = useState<string | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [trail, setTrail] = useState<TrailEntry[]>(loadTrail)
 
   const refreshBalance = useCallback(async (which: DemoWallet) => {
     try {
@@ -117,9 +121,27 @@ export default function App() {
     }
   }, [compiled, recipient, amount, spentToday])
 
+  const breach = useMemo(
+    () => (compiled.ok ? breachAmount(compiled.rules) : null),
+    [compiled],
+  )
+
   function updateMandate(text: string) {
     setMandate(text)
     remember(text)
+  }
+
+  function record(entry: TrailEntry) {
+    setTrail((current) => {
+      const next = prepend(current, entry)
+      saveTrail(next)
+      return next
+    })
+  }
+
+  function clearTrail() {
+    setTrail([])
+    saveTrail([])
   }
 
   async function requestAirdrop() {
@@ -142,41 +164,69 @@ export default function App() {
     setRecipient(fresh.recipient.toBase58())
     updateMandate(exampleMandate(fresh.recipient.toBase58()))
     setLamports(null)
-    setSignature(null)
     setNotice('New throwaway wallet generated.')
   }
 
-  async function send() {
-    // Belt and braces: the button is already disabled unless the engine
-    // allowed it, and the engine is asked again here before anything is signed.
-    if (!decision || decision.verdict !== 'allowed') return
+  /**
+   * One button, one path: ask the mandate, record the answer, and sign only
+   * if the answer was yes. A refusal is an entry in the trail with no
+   * signature — that absence is the product working, so it is worth showing.
+   */
+  async function checkAndSend(value: number) {
+    if (!compiled.ok) return
 
-    const value = toLamports(amount)
-    if (value === null) return
+    const spent = toLamports(spentToday) ?? 0
+    const target = recipient.trim()
+    const decided = check(compiled.rules, {
+      recipient: target,
+      lamports: value,
+      spentTodayLamports: spent,
+    })
+
+    if (decided.verdict === 'refused') {
+      record(entryFrom({ decision: decided, lamports: value, recipient: target }))
+      return
+    }
 
     setSending(true)
-    setError(null)
-    setSignature(null)
     try {
-      const sent = await sendAllowedTransfer({
+      const signature = await sendAllowedTransfer({
         wallet: wallet.keypair,
-        recipient: new PublicKey(recipient.trim()),
+        recipient: new PublicKey(target),
         lamports: value,
-        satisfiedRuleIds: decision.satisfied ?? [],
+        satisfiedRuleIds: decided.satisfied ?? [],
         mandateFingerprint: await fingerprint(mandate),
       })
 
-      setSignature(sent)
+      record(entryFrom({ decision: decided, lamports: value, recipient: target, signature }))
       // Today's total is what the daily budget is measured against, so a real
       // send has to count towards it.
-      const spent = toLamports(spentToday) ?? 0
       setSpentToday(formatSol(spent + value))
       await refreshBalance(wallet)
     } catch (caught) {
-      setError(readable(caught))
+      record(
+        entryFrom({
+          decision: decided,
+          lamports: value,
+          recipient: target,
+          error: readable(caught),
+        }),
+      )
     } finally {
       setSending(false)
     }
+  }
+
+  function submit() {
+    const value = toLamports(amount)
+    if (value !== null && value > 0) void checkAndSend(value)
+  }
+
+  /** The nudge, as a button: set the amount over the limit and run it. */
+  function tryBreach() {
+    if (breach === null) return
+    setAmount(formatSol(breach))
+    void checkAndSend(breach)
   }
 
   return (
@@ -188,6 +238,8 @@ export default function App() {
           is signed.
         </p>
       </header>
+
+      <Intro nudge={breach === null ? null : formatSol(breach)} />
 
       <WalletPanel
         wallet={wallet}
@@ -214,11 +266,13 @@ export default function App() {
         onSpentToday={setSpentToday}
         decision={decision}
         blockedBy={blockedBy}
-        onSend={() => void send()}
+        onCheckAndSend={submit}
+        onTryBreach={tryBreach}
+        breach={breach === null ? null : formatSol(breach)}
         sending={sending}
-        signature={signature}
-        error={error}
       />
+
+      <TrailPanel trail={trail} onClear={clearTrail} />
 
       <section className="panel panel--muted">
         <h2>What this is</h2>

@@ -338,3 +338,76 @@ a {
   overflow-wrap: anywhere;
   user-select: all;
 }
+
+.panel--intro {
+  border-style: dashed;
+}
+
+.panel--intro p {
+  margin: 0 0 0.75rem;
+}
+
+.panel--intro p:last-child {
+  margin-bottom: 0;
+}
+
+.nudge {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  background: var(--surface-sunken);
+  font-size: 0.9375rem;
+}
+
+.trail {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trail-entry {
+  padding: 0.875rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.trail-entry:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.trail-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+  margin-bottom: 0.375rem;
+}
+
+.trail-head .verdict {
+  margin: 0;
+}
+
+.trail-amount {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.875rem;
+}
+
+.trail-time {
+  margin-left: auto;
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+}
+
+.trail-reason {
+  margin: 0;
+  font-size: 0.9375rem;
+}
+
+.trail-link {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+}
+
+.trail-link--error {
+  color: var(--warn);
+}

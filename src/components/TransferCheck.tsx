@@ -1,5 +1,4 @@
 import type { Decision } from '../policy'
-import { explorerTx } from '../chain/devnet'
 
 interface Props {
   recipient: string
@@ -11,10 +10,11 @@ interface Props {
   decision: Decision | null
   /** Why there is no decision to show yet. */
   blockedBy: string | null
-  onSend: () => void
+  onCheckAndSend: () => void
+  onTryBreach: () => void
+  /** Formatted amount that breaks the mandate, or null if it sets no limit. */
+  breach: string | null
   sending: boolean
-  signature: string | null
-  error: string | null
 }
 
 export function TransferCheck({
@@ -26,12 +26,13 @@ export function TransferCheck({
   onSpentToday,
   decision,
   blockedBy,
-  onSend,
+  onCheckAndSend,
+  onTryBreach,
+  breach,
   sending,
-  signature,
-  error,
 }: Props) {
   const allowed = decision?.verdict === 'allowed'
+  const ready = decision !== null && !sending
 
   return (
     <section className="panel">
@@ -89,29 +90,24 @@ export function TransferCheck({
         <button
           type="button"
           className="button button--primary"
-          onClick={onSend}
-          disabled={!allowed || sending}
+          onClick={onCheckAndSend}
+          disabled={!ready}
         >
-          {sending ? 'Sending…' : 'Sign and send on devnet'}
+          {sending ? 'Sending…' : 'Check and send'}
         </button>
+
+        {breach && (
+          <button type="button" className="button" onClick={onTryBreach} disabled={sending}>
+            Try {breach} SOL — breaks the mandate
+          </button>
+        )}
+
         <p className="footnote send-note">
           {allowed
-            ? 'The engine allowed it, so this button can sign.'
-            : 'No signature is produced while the mandate refuses. The button is not disabled to be polite — there is simply nothing to sign.'}
+            ? 'The rules allow this one, so pressing the button signs it and sends it on devnet.'
+            : 'Press it anyway: the refusal is recorded in the trail, and nothing is signed.'}
         </p>
       </div>
-
-      {error && <p className="notice notice--error">{error}</p>}
-
-      {signature && (
-        <p className="notice notice--ok">
-          Sent, with a memo naming the rules that allowed it.{' '}
-          <a href={explorerTx(signature)} target="_blank" rel="noreferrer">
-            See it on the explorer
-          </a>
-          .
-        </p>
-      )}
     </section>
   )
 }
