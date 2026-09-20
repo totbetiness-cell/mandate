@@ -22,9 +22,13 @@ You write your mandate as ordinary sentences:
 ```
 Never send more than 0.5 SOL in one transfer.
 Never send more than 2 SOL per day.
-Only send to the treasury and the payroll wallet.
+Only send to Treasury11111111111111111111111111111111111.
 The mandate is active.
 ```
+
+(That address is a readable stand-in. The page fills the example in with a real
+devnet address it generated for you, so the mandate works the moment you open
+it.)
 
 Mandate compiles those sentences into a deterministic checklist and runs it
 **before anything is signed**. That is the design; the status section below says
@@ -158,6 +162,70 @@ This project is built with AI assistance throughout:
 and for drafting the technical design. Scope, direction and what ships are the
 author's decisions. Stated here rather than left to be inferred from the commit
 history.
+
+## Who this is for
+
+**Teams running an agent or a script on a wallet.** A trading bot, a payout
+job, a treasury agent, anything where software moves funds without a person
+approving each transfer. They need a limit that does not live inside the thing
+being limited.
+
+**The person who has to answer for it afterwards.** A founder, a treasurer, an
+auditor. Today the answer to "why did it send that?" is a log file, if anyone
+kept one. With Mandate the answer is a sentence someone wrote and a transaction
+that cites it.
+
+**Teams shipping agents to other people.** If your product signs on a
+customer's behalf, "the model was told not to" is not a control you can show
+anyone. A mandate is.
+
+## Why now
+
+Agent wallets are arriving on Solana faster than the controls for them. The
+pattern that keeps repeating is the same one this project started from: the
+guardrails live inside the agent, in its prompt or its code, and the agent is
+the one component that cannot be trusted to enforce them. A prompt is a
+request, not a limit.
+
+Two things make this the moment. First, the check needs no new on-chain program
+to be useful — it can ship today against programs that already exist. Second,
+the pieces for a verifiable answer are already on the chain: put the reason in
+the transaction and the audit trail is public by construction, with nothing to
+self-host and nothing to trust.
+
+## What this is not
+
+Being clear about the edges matters more than sounding big:
+
+- **Not a wallet, and not custody.** Mandate never holds anyone's keys. In this
+  demo the key is generated in your browser and never leaves it.
+- **Not a smart contract.** The check runs before signing, off-chain. That is a
+  deliberate limitation: it constrains the client that signs, not the chain. An
+  attacker holding the private key is out of scope — this stops an agent
+  misbehaving, not a thief.
+- **Not an AI product.** There is no model anywhere in the decision path, on
+  purpose. The whole value is that the answer is predictable.
+- **Not a compliance product.** It records what a mandate allowed. It makes no
+  claim about any regulation.
+
+## Where it could go
+
+Roughly in the order the constraints suggest, not as promises:
+
+1. **A signer, not a page.** The same engine behind a signing interface an
+   existing agent can call, so the rules apply without rewriting the agent.
+2. **Rules that need more than arithmetic.** Time windows, per-recipient
+   budgets, token-aware limits, a second signature above a threshold.
+3. **On-chain enforcement where it is worth it.** For a treasury that cannot
+   accept a client-side check, the same mandate compiled into a program that
+   enforces it. Off-chain first because it is useful sooner, not because on-chain
+   is wrong.
+4. **Mandates that outlive one browser.** Shared, versioned, with the
+   fingerprint making it provable which wording was in force for any transfer.
+
+No revenue figures, market sizes or user counts appear here. This project has
+none yet, and inventing them would undermine the one thing it is built to
+demonstrate: claims you can check.
 
 ## Licence
 
