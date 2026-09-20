@@ -60,6 +60,14 @@ describe('check · the four rules', () => {
     expect(decision.reason).toContain('0.1 SOL')
   })
 
+  it('names every rule that let the transfer through, for the memo', () => {
+    expect(check(rules, transfer()).satisfied).toEqual(['L1', 'L2', 'L3', 'L4'])
+  })
+
+  it('names no satisfied rules on a refusal', () => {
+    expect(check(rules, transfer({ recipient: STRANGER })).satisfied).toBeUndefined()
+  })
+
   it('refuses a recipient that is not on the list, and says which line decided', () => {
     const decision = check(rules, transfer({ recipient: STRANGER }))
     expect(decision.verdict).toBe('refused')

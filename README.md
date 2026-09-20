@@ -58,10 +58,11 @@ refusal always points at a line you can go and read.
 
 ## Status
 
-**Day 3 of the build.** The editor is live: type a mandate, watch the rules
-appear, try a transfer against them and see which line decides. Nothing is
-signed or sent yet — the devnet integration is next. This repository's history
-is public and starts at zero; what is listed as done is what exists.
+**Day 4 of the build.** The loop is closed: write a mandate, try a transfer,
+and if the rules allow it the page signs and sends it on devnet with a memo
+naming the rules that allowed it. If the rules refuse, no signature is ever
+produced. This repository's history is public and starts at zero; what is
+listed as done is what exists.
 
 - [x] Project scaffold, production build, test harness
 - [x] Amount handling: SOL parsed from decimal strings into integer lamports,
@@ -69,7 +70,7 @@ is public and starts at zero; what is listed as done is what exists.
 - [x] Deployment to GitHub Pages — <https://totbetiness-cell.github.io/mandate/>
 - [x] Policy engine: four rule kinds, parser, 26 unit tests
 - [x] Mandate editor with live rule readout
-- [ ] Devnet integration: keypair, airdrop, transfer, memo
+- [x] Devnet integration: keypair, airdrop, transfer, memo
 - [ ] Audit trail with explorer links
 - [ ] Demo video
 
@@ -108,10 +109,28 @@ browser; the demo keypair is generated there and never leaves it.
 | Cluster | Solana **devnet** (public RPC) |
 | Custom program | none — the check happens off-chain, before signing |
 | Programs used | System Program (transfers) and SPL Memo, `MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr` (verified against the official docs and the devnet RPC) |
-| Demo addresses | _added when the devnet integration lands_ |
-| Example signatures | _added when the devnet integration lands_ |
+| Demo addresses | generated per visitor, in the browser; never reused, never uploaded |
+| Example signatures | _pending: the public devnet faucet is currently rate limited, see below_ |
 
 No mainnet. No transaction in this project moves funds with real value.
+
+The memo of an allowed transfer reads:
+
+```
+mandate/1 rules=L1,L2,L3,L4 sha256=1a2b3c4d5e6f7a8b
+```
+
+The rule ids point into the mandate; the fingerprint is the truncated SHA-256
+of its exact wording, so nobody can later claim a different mandate was in
+force.
+
+**Devnet faucet.** Funding is rate limited per address and per IP and the
+faucet is regularly dry. If the airdrop button will not pay out, the page shows
+the demo address so it can be funded at
+[faucet.solana.com](https://faucet.solana.com). The live chain check in
+`src/chain/devnet.live.test.ts` skips rather than fails when no funded payer is
+available — a test that goes red because someone else's faucet is empty tells
+you nothing about this code.
 
 ## Non-custodial by construction
 

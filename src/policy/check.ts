@@ -41,15 +41,19 @@ export function check(rules: Rule[], transfer: IntendedTransfer): Decision {
     }
   }
 
+  const satisfied: string[] = []
+
   for (const rule of rules) {
     const refusal = objection(rule, transfer)
     if (refusal) {
       return { verdict: 'refused', decidedBy: rule, reason: refusal }
     }
+    satisfied.push(rule.id)
   }
 
   return {
     verdict: 'allowed',
+    satisfied,
     reason: `Every rule in this mandate allows it: ${formatSol(
       transfer.lamports,
     )} SOL to ${transfer.recipient}.`,

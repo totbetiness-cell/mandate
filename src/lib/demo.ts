@@ -1,17 +1,16 @@
 /**
- * Placeholders for the example mandate.
+ * The example mandate the page starts with.
  *
- * Valid base58 by shape, obviously invented by sight. They stay placeholders
- * only until the devnet integration lands and the page can seed the example
- * with the demo wallet it actually generated.
+ * It is built around the demo wallet's own generated recipient, so the example
+ * is immediately usable: the address in the allow-list is a real devnet
+ * address this page can actually send to.
  */
-export const DEMO_TREASURY = 'Treasury11111111111111111111111111111111111'
-export const DEMO_VENDOR = 'Vendor22222222222222222222222222222222222222'
-
-export const EXAMPLE_MANDATE = [
-  '# Edit these sentences — the rules on the right follow along.',
-  'Never send more than 0.5 SOL in one transfer.',
-  'Never send more than 2 SOL per day.',
-  `Only send to ${DEMO_TREASURY} and ${DEMO_VENDOR}.`,
-  'The mandate is active.',
-].join('\n')
+export function exampleMandate(recipient: string): string {
+  return [
+    '# Edit these sentences — the rules on the right follow along.',
+    'Never send more than 0.5 SOL in one transfer.',
+    'Never send more than 2 SOL per day.',
+    `Only send to ${recipient}.`,
+    'The mandate is active.',
+  ].join('\n')
+}

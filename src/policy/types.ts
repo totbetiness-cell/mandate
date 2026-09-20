@@ -72,6 +72,12 @@ export interface Decision {
    * mandate or a nonsensical amount.
    */
   decidedBy?: Rule
+  /**
+   * On an approval: the ids of every rule that was checked and did not object.
+   * These go into the on-chain memo, so the transaction names the rules that
+   * let it through, not just the mandate it came from.
+   */
+  satisfied?: string[]
   /** Plain sentence for the UI. Assembled from the rule, never from a model. */
   reason: string
 }

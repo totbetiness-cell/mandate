@@ -34,3 +34,6 @@ id.json
 wallet.json
 demo-keypair.json
 secrets.json
+
+# Devnet-Wegwerf-Zahler fuer die Live-Pruefung (kein realer Wert, trotzdem nie im Repo)
+.devnet-payer.json
