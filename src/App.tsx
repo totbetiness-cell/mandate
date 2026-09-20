@@ -36,10 +36,12 @@ export default function App() {
       <section className="panel panel--muted">
         <h2>Status</h2>
         <p>
-          Day 1: scaffold only. The example above does not run yet — the
-          parser, the devnet integration and the audit trail land here over the
-          coming days. The commit history is public and shows the work as it
-          happens.
+          Day 2: the policy engine is written and tested — four rule kinds, a
+          parser that refuses to guess, and a check that refuses by default.
+          Nothing is wired to this page or to a chain yet, so the example above
+          is still only an illustration. The editor, the devnet integration and
+          the audit trail land here over the coming days; the commit history is
+          public and shows the work as it happens.
         </p>
       </section>
     </main>

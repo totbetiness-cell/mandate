@@ -27,8 +27,8 @@ The mandate is active.
 ```
 
 Mandate compiles those sentences into a deterministic checklist and runs it
-**before anything is signed**. That is the design; the sections below say what
-is actually built so far.
+**before anything is signed**. That is the design; the status section below says
+what is actually built so far.
 
 - **Passes** → the transfer is sent with an SPL Memo instruction carrying the
   rule ID and a hash of the mandate that authorised it. The on-chain record
@@ -36,15 +36,30 @@ is actually built so far.
 - **Fails** → the transfer is never signed, and you are shown the exact line it
   broke.
 
-The check is plain TypeScript with unit tests. It makes no network calls and no
-model calls: given the same mandate and the same transfer it returns the same
-decision every time. A guardrail whose output you cannot predict is not a
-guardrail — so the one component that has to be boring is boring on purpose.
+### Three properties the engine is built around
+
+**It refuses by default.** An empty mandate allows nothing. A mandate that never
+says who may receive funds allows nobody. The burden is on your sentences to
+permit; it is never on the engine to guess what you meant to forbid.
+
+**A line it does not understand stops everything.** A mandate with one
+unparseable sentence produces no rules at all, rather than a partial rule set
+you might mistake for the whole thing. Silent omission is the dangerous failure
+mode for a guardrail: it leaves a hole exactly where the author believed they
+had put a limit.
+
+**It is deterministic.** No clock, no network, no randomness, no model call.
+Given the same mandate and the same transfer it returns the same decision every
+time. A guardrail whose output you cannot predict is not a guardrail — so the
+one component that has to be boring is boring on purpose.
+
+Rules are read top to bottom and the first one that objects decides, so a
+refusal always points at a line you can go and read.
 
 ## Status
 
-**Day 1 of the build: scaffold only.** Nothing above is wired up yet — the
-example mandate does not run, because the parser does not exist. This
+**Day 2 of the build.** The engine is done and tested; nothing is wired to a
+screen or to a chain yet, so the page still only describes the product. This
 repository's history is public and starts at zero; what is listed as done is
 what exists.
 
@@ -52,7 +67,7 @@ what exists.
 - [x] Amount handling: SOL parsed from decimal strings into integer lamports,
       so no limit can be walked past by floating-point rounding
 - [x] Deployment to GitHub Pages — <https://totbetiness-cell.github.io/mandate/>
-- [ ] Policy engine: four rule kinds, parser, unit tests
+- [x] Policy engine: four rule kinds, parser, 26 unit tests
 - [ ] Mandate editor
 - [ ] Devnet integration: keypair, airdrop, transfer, memo
 - [ ] Audit trail with explorer links
