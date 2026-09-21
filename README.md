@@ -68,15 +68,22 @@ to it on the explorer. Refused entries carry no link, because nothing was
 signed and there is nothing on the chain to show.
 
 The trail lives in your browser and nowhere else. There is no backend, so there
-is no server-side log you would have to take our word for. The entries that
-matter are already public: they are on devnet.
+is no server-side log you would have to take our word for. Once a transfer is
+sent, the entry that matters is public — it is the transaction on devnet, and
+the trail links straight to it.
 
 ## Status
 
-**Day 5 of the build.** Write a mandate, try a transfer, and the page answers
-before anything is signed. Allowed transfers go out on devnet carrying a memo
-that names the rules that allowed them; refused ones produce no signature at
-all. Either way the answer is kept in the audit trail, so the refusals are
+**Day 2 of the build** (first commit 2026-09-20). Write a mandate, try a
+transfer, and the page answers before anything is signed. An allowed transfer is
+built, signed and sent on devnet with a memo naming the rules that allowed it;
+a refused one produces no signature at all.
+
+**Not yet demonstrated on-chain.** The send path is built and covered by tests,
+but no funded transfer has been made yet: the public devnet faucet has been
+rate-limited for this project's address since 2026-09-20. Until that changes,
+there are no example signatures to show, and this README will not pretend
+otherwise. Either way the answer is kept in the audit trail, so the refusals are
 visible next to the approvals — that absence of a signature is the product
 working. This repository's history is public and starts at zero; what is
 listed as done is what exists.
@@ -85,7 +92,7 @@ listed as done is what exists.
 - [x] Amount handling: SOL parsed from decimal strings into integer lamports,
       so no limit can be walked past by floating-point rounding
 - [x] Deployment to GitHub Pages — <https://totbetiness-cell.github.io/mandate/>
-- [x] Policy engine: four rule kinds, parser, 26 unit tests
+- [x] Policy engine: four rule kinds, parser, 46 unit tests
 - [x] Mandate editor with live rule readout
 - [x] Devnet integration: keypair, airdrop, transfer, memo
 - [x] Audit trail with explorer links, refusals included
